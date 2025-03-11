@@ -5,6 +5,14 @@
 #include <sstream>
 #include<iostream>
 #include<fstream>
+#include<algorithm>
+
+bool allScoresInvalid(const std::vector<StudentWrapper>& students) {
+    return std::all_of(students.begin(), students.end(),
+        [](const StudentWrapper& sw) {
+            return sw.getScore() == -1.0;
+        });
+}
 
 std::string Class::toString() const {
     std::ostringstream oss;
@@ -25,12 +33,12 @@ StudentWrapper& Class::getStudentWrapper(const std::string& studentId) {
         if (sw.id == studentId)
             return sw;
     }
-    throw "No Match Student";
+    std::cerr << "No Match Student";
 }
 
 double Class::getHighestScore() {
     // TODO implement getHighestScore
-    if (students.empty()) {
+    if (allScoresInvalid(students)||students.empty()) {
         return -1.0;
     }
     double highestScore = students[0].getScore();
@@ -45,8 +53,8 @@ double Class::getHighestScore() {
 
 double Class::getLowestScore() {
     // TODO implement getLowestScore
-    if (students.empty()) {
-        return -1.0; //
+    if (allScoresInvalid(students)||students.empty()) {
+        return -1.0;
     }
     double lowestScore = students[0].getScore();
     for (std::vector<StudentWrapper>::iterator it = students.begin();it != students.end();++it){
@@ -60,6 +68,9 @@ double Class::getLowestScore() {
 
 double Class::getAvgScore() {
     // TODO implement getAvgScore
+    if (allScoresInvalid(students)||students.empty()) {
+        std::cerr << "No Valid Score"<<std::endl;
+    }
     double aveScore = 0.0,totalScore = 0.0,n=0;
     for (int i = 0; i < students.size(); ++i){
         if (students[i].getScore() != -1.0) {
@@ -75,7 +86,7 @@ void Class::saveScore(const std::string& filename) {
     // TODO implement saveScore
     std::ofstream outfile(filename);
     if (!outfile.is_open()) {
-        std::cerr << "Can't Open File" << std::endl;
+        throw  "Can't Open File" ;
         return;
     }
     outfile << name << std::endl;
