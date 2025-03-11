@@ -121,10 +121,10 @@ void AppX::loadFiles()
         while(getline(clfile, line)){
           if (line.empty())
             break;
-          for(int i=0;i<line.length();i++){
-            if(studentVec[i]->id == line){
-              studentVec[i]->addClass(cl);
-              cl->addStudent(*studentVec[i]);
+          for(auto &student : studentVec) {
+            if(student->id == line){
+              student->addClass(cl);
+              cl->addStudent(*student);
               break;
             }
           }
@@ -173,6 +173,11 @@ void AppX::inputScore()
               studentId = sbuf.substr(0,pos);
               studentScore = stod(sbuf.substr(pos+1,string::npos));
 
+              if(studentScore > 100 || studentScore < 0){
+                  cerr<<"Wrong Score" << endl;
+                  continue;
+              }
+
               Student *st=nullptr;
               for (auto & it : studentVec) {
                   if (studentId == it->id) {
@@ -184,21 +189,21 @@ void AppX::inputScore()
                   cerr << "No Match Student" << endl;
                   continue;
               }
-              if(studentScore > 100 || studentScore < 0){
-                  cerr<<"Wrong Score" << endl;
-                  continue;
-              }
+
 
               StudentWrapper &sw = cl->getStudentWrapper(studentId);
               sw.setScore(studentScore);
 
-      } catch (const invalid_argument&) {
+      } catch (const invalid_argument &) {
           cerr << "No Valid Score" << endl;  continue;
-      } catch (const out_of_range&) {
+      } catch (const out_of_range &) {
           cerr << "Out of Range" << endl;  continue;
       }
-        catch (...) {
-            cerr << "Other Error" << endl;  continue;
+          catch (const char *e) {
+              cerr << e << endl;   continue;
+          }
+         catch (...) {
+            cerr << "Unknown Error" << endl;  continue;
         }
       }
     }
