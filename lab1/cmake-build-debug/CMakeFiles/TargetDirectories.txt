@@ -1,0 +1,4 @@
+C:/Users/Administrator/Desktop/mctj/8-76/lab1/cmake-build-debug/CMakeFiles/lab1lib.dir
+C:/Users/Administrator/Desktop/mctj/8-76/lab1/cmake-build-debug/CMakeFiles/lab1.dir
+C:/Users/Administrator/Desktop/mctj/8-76/lab1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Administrator/Desktop/mctj/8-76/lab1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
