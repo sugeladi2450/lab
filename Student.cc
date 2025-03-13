@@ -3,6 +3,15 @@
 #include <sstream>
 #include "Class.h"
 
+bool Student::AllScoresInvalid(const std::vector<Class*>& classes) const {
+    for (auto &cl : classes) {
+        if (cl->getStudentWrapper(id).getScore() != -1.0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::string Student::toString() const
 {
     // TODO: uncomment the following code after implementing class Student.
@@ -15,23 +24,18 @@ std::string Student::toString() const
         << "\n\tdegree: " << (degree == graduate ? "graduate" : "undergraduate")
         << std::endl;
     return oss.str();
-    return "";
 }
 
 // TODO: implement functions which are declared in Student.h.
 double Graduate::getGpa() {
-    if (classes.empty())
-        return 0.0;
+    if (classes.empty() || AllScoresInvalid(classes)) return 0.0;
 
     double total_point = 0.0,total_score = 0.0,gpa=0.0;
-    int course = 0;
 
     for (auto it : classes) {
 
             double score = it->getStudentWrapper(id).getScore();
             if (score == -1.0)  continue;
-
-            course++;
             double gp;
             switch ((int)score / 10) {
                 case 10: gp = 4.0; break;
@@ -45,21 +49,12 @@ double Graduate::getGpa() {
             total_score += gp * it->point;
     }
 
-
-    if (course == 0)
-        return 0.0;
     gpa = total_score / total_point;
-
     return gpa;
 }
 
 double Graduate::getAvgScore() {
-    if (classes.empty()) return 0.0;
-    int n=0;
-    for (auto it : classes) {
-        if (it->getStudentWrapper(id).getScore() == -1.0) n++;
-    }
-    if (n == classes.size()) return 0.0;
+    if (classes.empty() || AllScoresInvalid(classes)) return 0.0;
 
     double total_score = 0.0;
     double total_point = 0.0;
@@ -73,13 +68,7 @@ double Graduate::getAvgScore() {
 
 }
 double Undergraduate::getGpa(){
-    if (classes.empty()) return 0.0;
-
-    int n=0;
-    for (auto it : classes) {
-        if (it->getStudentWrapper(id).getScore() == -1.0) n++;
-    }
-    if (n == classes.size()) return 0.0;
+    if (classes.empty() || AllScoresInvalid(classes)) return 0.0;
 
     double total_point = 0.0,total_score = 0.0,gpa = 0.0;
     for (int i = 0;i<classes.size();i++) {
@@ -92,17 +81,14 @@ double Undergraduate::getGpa(){
     return gpa;
 }
 double Undergraduate::getAvgScore(){
-    if (classes.empty()) return 0.0;
-
-    int n=0;
-    for (auto it : classes) {
-        if (it->getStudentWrapper(id).getScore() == -1.0) n++;
-    }
-    if (n == classes.size()) return 0.0;
+    if (classes.empty() || AllScoresInvalid(classes)) return 0.0;
 
     return Undergraduate::getGpa() * 20;
 }
 
 void Student::addClass(Class *c) {
+    for (auto& cls : classes) {
+        if (cls == c) return;
+    }
     classes.push_back(c);
 }
