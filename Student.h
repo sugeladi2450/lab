@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 class Class;
 
@@ -28,6 +29,7 @@ public:
     virtual double getAvgScore() = 0;
     std::string toString() const;
     void addClass(Class *c);
+    bool AllScoresInvalid(const std::vector<Class*>& classes) const;
 
 };
 
