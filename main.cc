@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "Class.h"
 #include "Student.h"
+#include <limits>
 
 using namespace std;
 
@@ -41,6 +42,7 @@ AppX::~AppX()
 AppX::AppX()
 {
     loadFiles();
+
 }
 
 void AppX::loadFiles()
@@ -59,6 +61,7 @@ void AppX::loadFiles()
         cerr << "Failed to open Students.txt" << endl;
         return;
     }
+
 
     while (getline(stfile, line)) {
         if (line.empty())
@@ -105,6 +108,7 @@ void AppX::loadFiles()
         cerr << "Failed to open Classes.txt" << endl;
         return;
     }
+
     while(getline(clfile,line)){
         if (line.empty())
           continue;
@@ -141,41 +145,41 @@ void AppX::inputScore()
     string sbuf;
 
     while (true) {
-      cout << "Please input the class name (or input a q to quit): ";
-      cin >> sbuf;
-      if(sbuf == "q")
-        break;
-
-      Class *cl = nullptr;
-      for (auto & it : classVec) {
-            if (it->name == sbuf) {
-                cl = it;
+        try {
+            cout << "Please input the class name (or input a q to quit): ";
+            cin >> sbuf;
+            if(sbuf == "q")
                 break;
+
+            Class *cl = nullptr;
+            for (auto & it : classVec) {
+                if (it->name == sbuf) {
+                    cl = it;
+                    break;
+                }
             }
-      }
-      if (cl == nullptr) {
-            cerr << "No Match Class" << endl;
-            continue;
-      }
-      while (true) {
-          cin >> sbuf;
+            if (cl == nullptr) {
+                throw "No Match Class";
+            }
+
+        while (true) {
+          try {
+              cin >> sbuf;
           if (sbuf == "q")
               break;
 
           int pos = sbuf.find(',');
           if (pos == string::npos) {
-              cerr << "No Valid Score" << endl;
-              continue;
+              throw "No Valid Score";
           }
           string  studentId;
           double studentScore;
-          try {
+
               studentId = sbuf.substr(0,pos);
               studentScore = stod(sbuf.substr(pos+1,string::npos));
 
               if(studentScore > 100 || studentScore < 0){
-                  cerr<<"Wrong Score" << endl;
-                  continue;
+                  throw "Wrong Score";
               }
 
               Student *st=nullptr;
@@ -186,33 +190,34 @@ void AppX::inputScore()
                   }
               }
               if (st == nullptr) {
-                  cerr << "No Match Student" << endl;
-                  continue;
+                  throw "No Match Student";
               }
-
 
               StudentWrapper &sw = cl->getStudentWrapper(studentId);
               sw.setScore(studentScore);
 
-      } catch (const invalid_argument &) {
-          cerr << "No Valid Score" << endl;  continue;
-      } catch (const out_of_range &) {
-          cerr << "Out of Range" << endl;  continue;
-      }
-          catch (const char *e) {
-              cerr << e << endl;   continue;
+          } catch (string e) {
+              cerr << e << endl;
+          } catch (char const* e){
+              cerr << e << endl;
+          } catch (...) {
+              cerr << "Unknown exception caught" << endl;
           }
-         catch (...) {
-            cerr << "Unknown Error" << endl;  continue;
-        }
       }
+        }catch (string e) {
+            cerr << e << endl;
+        } catch (char const* e){
+            cerr << e << endl;
+        } catch (...) {
+            cerr << "Unknown exception caught" << endl;
+        }
     }
 }
 
 void AppX::printScoreStats()
 {
     string sbuf;
-    Class* cl = nullptr;
+    Class* cl;
     double highest, lowest, avg;
 
     while (true) {
@@ -222,12 +227,14 @@ void AppX::printScoreStats()
           break;
 
         cl = nullptr;
-        for (auto & it : classVec) {
-            if (it->name == sbuf) {
-                cl = it;
+        for (vector<Class*>::iterator it = classVec.begin();
+                it != classVec.end();
+                ++ it) {
+            if ((*it)->name == sbuf) {
+                cl = *it;
                 break;
             }
-        }
+                }
         if (cl == nullptr) {
             cerr << "No Match Class" << endl;
             continue;
@@ -239,7 +246,7 @@ void AppX::printScoreStats()
             avg = cl->getAvgScore();
 
             cout << cl->toString() << endl;
-            cout << fixed << setprecision(2)<< "Highest,Lowest,Avg = " << highest << "," << lowest << "," << avg << endl;
+            cout << setiosflags(ios::fixed) << setprecision(2)<< "Highest,Lowest,Avg = " << highest << "," << lowest << "," << avg << endl;
         } catch (string e) {
             cerr << e << endl;
         } catch (char const* e){
@@ -257,21 +264,28 @@ void AppX::printGrade()
     string sbuf;
 
     while(true){
-        cin>>sbuf;
-        if(sbuf == "q") break;
-        Student *st=nullptr;
-        for (auto & it : studentVec) {
-            if (sbuf == it->id) {
-                st = it;
-                break;
+        try {
+            cin>>sbuf;
+            if(sbuf == "q") break;
+            Student *st=nullptr;
+            for (auto & it : studentVec) {
+                if (sbuf == it->id) {
+                    st = it;
+                    break;
+                }
             }
+            if(st == nullptr){
+                throw "No Match Student";
+            }
+            cout<<st->toString();
+            cout<< setiosflags(ios::fixed) << setprecision(2) << "GPA,AVG = " << st->getGpa() << ',' << st->getAvgScore() << endl;
+        } catch (string e) {
+            cerr << e << endl;
+        } catch (char const* e){
+            cerr << e << endl;
+        } catch (...) {
+            cerr << "Unknown exception caught" << endl;
         }
-        if(st == nullptr){
-            cerr<<"No Match Student\n";
-            continue;
-        }
-        cout<<st->toString();
-        cout<< fixed << setprecision(2) << "GPA,AVG = " << st->getGpa() << ',' << st->getAvgScore() << endl;
     }
 }
 
@@ -282,6 +296,7 @@ void AppX::saveScore() {
         cerr << "Failed to open scores.txt" << endl;
         return;
     }
+
     for (auto &cl : classVec) {
         outfile << cl->name <<endl;
         for (auto& sw : cl->getStudents()) {
@@ -315,7 +330,7 @@ int AppX::run()
             saveScore();
             break;
         } else {
-            cerr << "Invalid Command\n" << endl;
+            cout << "Invalid command!\n" << endl;
         }
     }
     return 0;
