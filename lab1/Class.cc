@@ -79,7 +79,7 @@ double Class::getLowestScore() {
            lowestScore = it->getScore();
         }
     }
-    return lowestScore;;
+    return lowestScore;
 }
 
 double Class::getAvgScore() {
