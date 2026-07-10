@@ -1,0 +1,4 @@
+C:/Users/Administrator/Desktop/项目/lab/lab4/build2/CMakeFiles/lab4_run.dir
+C:/Users/Administrator/Desktop/项目/lab/lab4/build2/CMakeFiles/lab4.dir
+C:/Users/Administrator/Desktop/项目/lab/lab4/build2/CMakeFiles/edit_cache.dir
+C:/Users/Administrator/Desktop/项目/lab/lab4/build2/CMakeFiles/rebuild_cache.dir

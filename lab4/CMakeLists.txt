@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 3.21)
+project(lab4)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(.)
+
+add_executable(lab4_run main.cpp Tree.cpp TreeNode.cpp Calculator.cpp)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/1.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/2.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/3.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/4.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/5.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/6.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+
+add_executable(lab4
+        main.cpp
+        Calculator.cpp
+        Tree.cpp
+        TreeNode.cpp
+        )
