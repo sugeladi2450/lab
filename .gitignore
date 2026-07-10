@@ -1,0 +1,23 @@
+# Build artifacts
+*.exe
+*.o
+*.obj
+cmake-build-*/
+build/
+build2/
+
+# IDE files
+.idea/
+.vscode/
+.DS_Store
+
+# Output files
+lab1/scores.txt
+lab1/debug.txt
+lab1/BugReport.txt.txt
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake

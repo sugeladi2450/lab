@@ -56,9 +56,9 @@ void AppX::loadFiles()
     Class *cl = nullptr;
 
     // Open a file as a input stream.
-    ifstream stfile("./Students.txt");
+    ifstream stfile("./Student.txt");
     if (!stfile.is_open()) {
-        cerr << "Failed to open Students.txt" << endl;
+        cerr << "Failed to open Student.txt" << endl;
         return;
     }
 
@@ -103,9 +103,9 @@ void AppX::loadFiles()
 
     // TODO: load data from ./Classes.txt and push objects to the vector.
     // Hint: how is student information read?
-    ifstream clfile("./Classes.txt");
+    ifstream clfile("./Class.txt");
     if (!clfile.is_open()) {
-        cerr << "Failed to open Classes.txt" << endl;
+        cerr << "Failed to open Class.txt" << endl;
         return;
     }
 
